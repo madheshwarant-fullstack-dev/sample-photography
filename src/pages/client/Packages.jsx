@@ -1,135 +1,208 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "../../assets/css/Packages.css";
+import packages from "../../data/packages";
 
 function Packages() {
-  const packages = [
-    {
-      name: "Package Mini",
-      type: "AFFORDABLE",
-      price: "₹15,000",
-      image: "/images/packages/mini.png",
-    },
-    {
-      name: "Package Smart",
-      type: "AFFORDABLE",
-      price: "₹20,000",
-      image: "/images/packages/smart.png",
-    },
-    {
-      name: "Package Smart Plus",
-      type: "AFFORDABLE",
-      price: "₹25,000",
-      image: "/images/packages/smart-plus.png",
-    },
-    {
-      name: "Package Photo Golden",
-      type: "AFFORDABLE",
-      price: "₹30,000",
-      image: "/images/packages/photo-golden.png",
-    },
-    {
-      name: "Silver Package",
-      type: "GRAND",
-      price: "₹45,000",
-      image: "/images/packages/silver.png",
-    },
-    {
-      name: "Silver Plus Package",
-      type: "GRAND",
-      price: "₹50,000",
-      image: "/images/packages/silver-plus.png",
-    },
-    {
-      name: "Golden Package",
-      type: "GRAND",
-      price: "₹65,000",
-      image: "/images/packages/golden.png",
-    },
-    {
-      name: "Diamond Package",
-      type: "GRAND",
-      price: "₹85,000",
-      image: "/images/packages/diamond.png",
-    },
-    {
-      name: "Premium Package",
-      type: "GRAND",
-      price: "₹1,00,000",
-      image: "/images/packages/premium.png",
-    },
-  ];
+    const [selectedCategory, setSelectedCategory] = useState("ALL");
 
-  return (
-    <div className="packages-page">
+    const categories = [
+        "ALL",
+        ...new Set(packages.map((pkg) => pkg.category)),
+    ];
 
-      <section className="packages-header text-center">
-        <p>MAHA CREATIVE PHOTOGRAPHY</p>
+    const filteredPackages =
+        selectedCategory === "ALL"
+            ? packages
+            : packages.filter(
+                  (pkg) => pkg.category === selectedCategory
+              );
 
-        <h1>
-          Our <span>Packages</span>
-        </h1>
+    return (
+        <div className="packages-page">
 
-        <p className="subtitle">
-          Choose the perfect photography package for your special moments.
-        </p>
-      </section>
+            {/* ================= HERO ================= */}
 
-      <section className="container py-5">
+            <section className="packages-hero">
+                <div className="packages-hero-content">
+                    <h1>Our Photography Packages</h1>
 
-        <div className="row g-4">
+                    <p>
+                        Choose the perfect photography package for your
+                        special moments. From intimate sessions to grand
+                        celebrations, we create memories that last forever.
+                    </p>
+                </div>
+            </section>
 
-          {packages.map((pkg, index) => (
-            <div className="col-lg-4 col-md-6" key={index}>
 
-              <div className="package-card">
+            {/* ================= PACKAGES ================= */}
 
-                <div className="package-image">
-                  <img
-                    src={pkg.image}
-                    alt={pkg.name}
-                  />
+            <section className="packages-section">
+
+                <div className="packages-section-header">
+                    <h2>Choose Your Package</h2>
+
+                    <p>
+                        Explore our carefully designed photography packages
+                        and find the one that suits your occasion.
+                    </p>
                 </div>
 
-                <div className="package-content">
 
-                  <span className="package-type">
-                    {pkg.type}
-                  </span>
+                {/* ================= FILTER ================= */}
 
-                  <h3>{pkg.name}</h3>
+                <div className="package-filters">
 
-                  <p>
-                    Capture Moments, Create Memories
-                  </p>
-
-                  <div className="package-bottom">
-
-                    <h4>{pkg.price}</h4>
-
-                    <button
-                      className="package-btn"
-                      onClick={() =>
-                        alert(`Selected: ${pkg.name}`)
-                      }
-                    >
-                      Book Now
-                    </button>
-
-                  </div>
+                    {categories.map((category) => (
+                        <button
+                            key={category}
+                            className={`package-filter-btn ${
+                                selectedCategory === category
+                                    ? "active"
+                                    : ""
+                            }`}
+                            onClick={() =>
+                                setSelectedCategory(category)
+                            }
+                        >
+                            {category}
+                        </button>
+                    ))}
 
                 </div>
 
-              </div>
 
-            </div>
-          ))}
+                {/* ================= PACKAGE GRID ================= */}
+
+                {filteredPackages.length > 0 ? (
+
+                    <div className="packages-grid">
+
+                        {filteredPackages.map((pkg, index) => (
+
+                            <div
+                                className={`package-card ${
+                                    index === 1 ? "featured" : ""
+                                }`}
+                                key={pkg.id}
+                            >
+
+                                {/* Image */}
+
+                                <div className="package-image">
+
+                                    <img
+                                        src={pkg.image}
+                                        alt={pkg.name}
+                                    />
+
+                                </div>
+
+
+                                {/* Content */}
+
+                                <div className="package-content">
+
+                                    <span className="package-category">
+                                        {pkg.category}
+                                    </span>
+
+                                    <h3>
+                                        {pkg.name}
+                                    </h3>
+
+
+                                    {pkg.description && (
+                                        <p className="package-description">
+                                            {pkg.description}
+                                        </p>
+                                    )}
+
+
+                                    {/* Price */}
+
+                                    <div className="package-price">
+
+                                        <span className="package-price-label">
+                                            Starting from
+                                        </span>
+
+                                        <span className="package-price-value">
+                                            {pkg.price}
+                                        </span>
+
+                                    </div>
+
+
+                                    {/* Highlights */}
+
+                                    {pkg.highlights &&
+                                        pkg.highlights.length > 0 && (
+
+                                            <ul className="package-highlights">
+
+                                                {pkg.highlights.map(
+                                                    (highlight, i) => (
+                                                        <li key={i}>
+                                                            {highlight}
+                                                        </li>
+                                                    )
+                                                )}
+
+                                            </ul>
+
+                                        )}
+
+
+                                    {/* Buttons */}
+
+                                    <div className="package-buttons">
+
+                                        <Link
+                                            to={`/package/${pkg.id}`}
+                                            className="package-btn package-btn-secondary"
+                                        >
+                                            View Details
+                                        </Link>
+
+                                        <Link
+                                            to={`/booking?package=${pkg.id}`}
+                                            className="package-btn package-btn-primary"
+                                        >
+                                            Book Now
+                                        </Link>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        ))}
+
+                    </div>
+
+                ) : (
+
+                    <div className="no-packages">
+
+                        <h3>
+                            No Packages Found
+                        </h3>
+
+                        <p>
+                            Please try another category.
+                        </p>
+
+                    </div>
+
+                )}
+
+            </section>
 
         </div>
-
-      </section>
-
-    </div>
-  );
+    );
 }
 
 export default Packages;
