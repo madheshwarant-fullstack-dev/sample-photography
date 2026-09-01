@@ -1,116 +1,135 @@
 import React from "react";
-
-const packages = [
-    {
-        name: "Basic",
-        price: "₹5,000",
-        features: [
-            "3 Hours Photography",
-            "50 Edited Photos",
-            "Digital Album",
-            "Online Delivery"
-        ]
-    },
-    {
-        name: "Premium",
-        price: "₹15,000",
-        features: [
-            "6 Hours Photography",
-            "150 Edited Photos",
-            "Premium Album",
-            "Online Delivery",
-            "Professional Editing"
-        ],
-        popular: true
-    },
-    {
-        name: "Wedding",
-        price: "₹30,000",
-        features: [
-            "Full Day Photography",
-            "300+ Edited Photos",
-            "Wedding Album",
-            "Cinematic Video",
-            "Online Gallery"
-        ]
-    }
-];
+import "../../assets/css/Packages.css";
 
 function Packages() {
-    return (
-        <section id="packages" className="packages-section py-5">
+  const packages = [
+    {
+      name: "Package Mini",
+      type: "AFFORDABLE",
+      price: "₹15,000",
+      image: "/images/packages/mini.png",
+    },
+    {
+      name: "Package Smart",
+      type: "AFFORDABLE",
+      price: "₹20,000",
+      image: "/images/packages/smart.png",
+    },
+    {
+      name: "Package Smart Plus",
+      type: "AFFORDABLE",
+      price: "₹25,000",
+      image: "/images/packages/smart-plus.png",
+    },
+    {
+      name: "Package Photo Golden",
+      type: "AFFORDABLE",
+      price: "₹30,000",
+      image: "/images/packages/photo-golden.png",
+    },
+    {
+      name: "Silver Package",
+      type: "GRAND",
+      price: "₹45,000",
+      image: "/images/packages/silver.png",
+    },
+    {
+      name: "Silver Plus Package",
+      type: "GRAND",
+      price: "₹50,000",
+      image: "/images/packages/silver-plus.png",
+    },
+    {
+      name: "Golden Package",
+      type: "GRAND",
+      price: "₹65,000",
+      image: "/images/packages/golden.png",
+    },
+    {
+      name: "Diamond Package",
+      type: "GRAND",
+      price: "₹85,000",
+      image: "/images/packages/diamond.png",
+    },
+    {
+      name: "Premium Package",
+      type: "GRAND",
+      price: "₹1,00,000",
+      image: "/images/packages/premium.png",
+    },
+  ];
 
-            <div className="container py-5">
+  return (
+    <div className="packages-page">
 
-                <div className="text-center mb-5">
+      <section className="packages-header text-center">
+        <p>MAHA CREATIVE PHOTOGRAPHY</p>
 
-                    <p className="section-title">
-                        PRICING
-                    </p>
+        <h1>
+          Our <span>Packages</span>
+        </h1>
 
-                    <h2 className="display-5 fw-bold">
-                        Our <span className="pink-text">Packages</span>
-                    </h2>
+        <p className="subtitle">
+          Choose the perfect photography package for your special moments.
+        </p>
+      </section>
+
+      <section className="container py-5">
+
+        <div className="row g-4">
+
+          {packages.map((pkg, index) => (
+            <div className="col-lg-4 col-md-6" key={index}>
+
+              <div className="package-card">
+
+                <div className="package-image">
+                  <img
+                    src={pkg.image}
+                    alt={pkg.name}
+                  />
+                </div>
+
+                <div className="package-content">
+
+                  <span className="package-type">
+                    {pkg.type}
+                  </span>
+
+                  <h3>{pkg.name}</h3>
+
+                  <p>
+                    Capture Moments, Create Memories
+                  </p>
+
+                  <div className="package-bottom">
+
+                    <h4>{pkg.price}</h4>
+
+                    <button
+                      className="package-btn"
+                      onClick={() =>
+                        alert(`Selected: ${pkg.name}`)
+                      }
+                    >
+                      Book Now
+                    </button>
+
+                  </div>
 
                 </div>
 
-
-                <div className="row g-4 justify-content-center">
-
-                    {packages.map((item, index) => (
-
-                        <div
-                            className="col-md-6 col-lg-4"
-                            key={index}
-                        >
-
-                            <div
-                                className={`package-card ${
-                                    item.popular ? "popular-package" : ""
-                                }`}
-                            >
-
-                                {item.popular && (
-                                    <span className="popular-badge">
-                                        MOST POPULAR
-                                    </span>
-                                )}
-
-                                <h3>{item.name}</h3>
-
-                                <h2 className="pink-text">
-                                    {item.price}
-                                </h2>
-
-                                <hr />
-
-                                {item.features.map((feature, i) => (
-
-                                    <p key={i}>
-                                        ✓ {feature}
-                                    </p>
-
-                                ))}
-
-                                <a
-                                    href="/booking"
-                                    className="btn btn-pink w-100 mt-3"
-                                >
-                                    Choose Package
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    ))}
-
-                </div>
+              </div>
 
             </div>
+          ))}
 
-        </section>
-    );
+        </div>
+
+      </section>
+
+    </div>
+  );
 }
 
 export default Packages;
