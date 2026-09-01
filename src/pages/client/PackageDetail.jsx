@@ -28,6 +28,7 @@ function PackageDetail() {
 
       {/* Top Header */}
       <div className="package-header">
+
         <button
           className="back-btn"
           onClick={() => navigate(-1)}
@@ -40,39 +41,54 @@ function PackageDetail() {
         <button className="share-btn">
           ⤴
         </button>
+
       </div>
+
 
       {/* Package Image */}
       <div className="package-image">
+
         <img
-          src={`/images/packages/${selectedPackage.id}.jpg`}
+          src={selectedPackage.image}
           alt={selectedPackage.name}
         />
+
       </div>
+
 
       {/* Package Content */}
       <div className="package-content">
 
+        {/* Category */}
         <p className="package-category">
           {selectedPackage.category}
         </p>
 
+
+        {/* Package Name */}
         <h1>{selectedPackage.name}</h1>
+
 
         {/* Delivery + Price */}
         <div className="package-info">
 
           <div className="info-box delivery">
             <span>◷</span>
-            <strong>{selectedPackage.delivery}</strong>
+            <strong>
+              {selectedPackage.delivery}
+            </strong>
           </div>
+
 
           <div className="info-box price">
             <span>▣</span>
-            <strong>{selectedPackage.price}</strong>
+            <strong>
+              {selectedPackage.price}
+            </strong>
           </div>
 
         </div>
+
 
         {/* About */}
         <section className="about-section">
@@ -80,10 +96,12 @@ function PackageDetail() {
           <h2>About this Service</h2>
 
           <p>
-            Capture Moments, Create Memories
+            {selectedPackage.description ||
+              "Capture Moments, Create Memories"}
           </p>
 
         </section>
+
 
         {/* Highlights */}
         <section className="highlights-section">
@@ -91,19 +109,27 @@ function PackageDetail() {
           <h2>Highlights</h2>
 
           <ul>
+
             {selectedPackage.highlights.map(
               (highlight, index) => (
                 <li key={index}>
-                  <span className="check">✓</span>
+
+                  <span className="check">
+                    ✓
+                  </span>
+
                   {highlight}
+
                 </li>
               )
             )}
+
           </ul>
 
         </section>
 
       </div>
+
 
       {/* Bottom Enquire Button */}
       <div className="enquire-container">
@@ -117,8 +143,11 @@ function PackageDetail() {
             );
           }}
         >
+
           <span>◉</span>
+
           Enquire Now
+
         </button>
 
       </div>
