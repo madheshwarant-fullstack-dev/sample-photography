@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import packages from "../data/packages";
+import packages from "../../data/packages";
 
 function PackageDetail() {
   const { packageId } = useParams();
