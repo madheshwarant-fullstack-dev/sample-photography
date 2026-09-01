@@ -1,3 +1,4 @@
+import smartImage from "../assets/images/packages/smart.png";
 const packages = [
   {
     id: "package-mini",
