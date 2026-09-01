@@ -1,96 +1,120 @@
 import React from "react";
-
-const services = [
-    {
-        icon: "💍",
-        title: "Wedding Photography",
-        description: "Beautifully capture every emotional moment of your wedding."
-    },
-    {
-        icon: "💕",
-        title: "Pre-Wedding",
-        description: "Creative and romantic pre-wedding photography sessions."
-    },
-    {
-        icon: "🎉",
-        title: "Event Photography",
-        description: "Professional coverage for birthdays and special events."
-    },
-    {
-        icon: "👤",
-        title: "Portrait Photography",
-        description: "Professional portraits that showcase your personality."
-    },
-    {
-        icon: "👤",
-        title: "Model Photography",
-        description: "High-quality product images for your business."
-    },
-    {
-        icon: "👶",
-        title: "Baby Photography",
-        description: "Preserve your baby's precious memories forever."
-    }
-];
+import "../../assets/css/Services.css";
 
 function Services() {
-    return (
-        <section id="services" className="services-section py-5">
+  const services = [
+    {
+      image: "/images/services/wedding.jpg",
+      title: "Wedding Photography",
+      description:
+        "Beautifully capture every special moment of your wedding day.",
+      price: "₹15,000",
+    },
+    {
+      image: "/images/services/birthday.jpg",
+      title: "Birthday Photography",
+      description:
+        "Professional photography for memorable birthday celebrations.",
+      price: "₹5,000",
+    },
+    {
+      image: "/images/services/baby.jpg",
+      title: "Baby Photography",
+      description:
+        "Creative and adorable photography for your little ones.",
+      price: "₹7,000",
+    },
+    {
+      image: "/images/services/prewedding.jpg",
+      title: "Pre-Wedding Photography",
+      description:
+        "Romantic pre-wedding photoshoots at beautiful locations.",
+      price: "₹10,000",
+    },
+    {
+      image: "/images/services/model.jpg",
+      title: "Model Photography",
+      description:
+        "Professional portfolio and fashion photography sessions.",
+      price: "₹8,000",
+    },
+    {
+      image: "/images/services/event.jpg",
+      title: "Event Photography",
+      description:
+        "Capture your special events with professional photography.",
+      price: "₹6,000",
+    },
+  ];
 
-            <div className="container py-5">
+  const handleBooking = (service) => {
+    alert(`Booking selected for ${service}`);
+  };
 
-                <div className="text-center mb-5">
+  return (
+    <div className="services-page">
 
-                    <p className="section-title">
-                        WHAT WE OFFER
-                    </p>
+      {/* Header */}
+      <section className="services-header text-center">
+        <p>MAHA CREATIVE PHOTOGRAPHY</p>
 
-                    <h2 className="display-5 fw-bold">
-                        Our <span className="pink-text">Services</span>
-                    </h2>
+        <h1>
+          Our <span>Services</span>
+        </h1>
 
-                    <p className="text-muted">
-                        Professional photography for every beautiful occasion.
-                    </p>
+        <p className="subtitle">
+          Professional photography services for your beautiful moments.
+        </p>
+      </section>
+
+      {/* Services */}
+      <section className="container py-5">
+        <div className="row g-4">
+
+          {services.map((service, index) => (
+            <div
+              className="col-lg-4 col-md-6"
+              key={index}
+            >
+              <div className="service-card">
+
+                <div className="service-image">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                  />
+                </div>
+
+                <div className="service-content">
+
+                  <h3>{service.title}</h3>
+
+                  <p>
+                    {service.description}
+                  </p>
+
+                  <h4>{service.price}</h4>
+
+                  <button
+                    className="book-btn"
+                    onClick={() =>
+                      handleBooking(service.title)
+                    }
+                  >
+                    Book Now
+                  </button>
 
                 </div>
 
-
-                <div className="row g-4">
-
-                    {services.map((service, index) => (
-
-                        <div
-                            className="col-md-6 col-lg-4"
-                            key={index}
-                        >
-
-                            <div className="service-card h-100">
-
-                                <div className="service-icon">
-                                    {service.icon}
-                                </div>
-
-                                <h4>
-                                    {service.title}
-                                </h4>
-
-                                <p>
-                                    {service.description}
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    ))}
-
-                </div>
-
+              </div>
             </div>
+          ))}
 
-        </section>
-    );
+        </div>
+      </section>
+
+    </div>
+  );
 }
 
 export default Services;
