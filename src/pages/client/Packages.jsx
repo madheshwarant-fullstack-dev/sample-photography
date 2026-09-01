@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../assets/css/Packages.css";
-import packages from "../../data/packages";
+import packages from "../data/packages";
 
 function Packages() {
     const [selectedCategory, setSelectedCategory] = useState("ALL");
