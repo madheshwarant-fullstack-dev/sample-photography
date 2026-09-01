@@ -10,6 +10,7 @@ import About from "./pages/client/About";
 import Services from "./pages/client/Services";
 import Gallery from "./pages/client/Gallery";
 import Packages from "./pages/client/Packages";
+import PackageDetail from "./pages/client/PackageDetail";
 import Booking from "./pages/client/Booking";
 import Contact from "./pages/client/Contact";
 import Login from "./pages/client/Login";
@@ -83,6 +84,17 @@ function App() {
                         <>
                             <Navbar />
                             <Packages />
+                            <Footer />
+                        </>
+                    }
+                />
+
+                <Route
+                    path="/package/:packageId"
+                    element={
+                        <>
+                            <Navbar />
+                            <PackageDetail />
                             <Footer />
                         </>
                     }
