@@ -1,0 +1,112 @@
+.services-page {
+  background: #ffffff;
+  min-height: 100vh;
+}
+
+/* Header */
+
+.services-header {
+  padding: 80px 20px 50px;
+  background: #f8f8f8;
+}
+
+.services-header > p:first-child {
+  color: #ff1493;
+  font-weight: 700;
+  letter-spacing: 4px;
+  font-size: 14px;
+}
+
+.services-header h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 15px 0;
+}
+
+.services-header h1 span {
+  color: #ff1493;
+}
+
+.services-header .subtitle {
+  color: #666;
+  font-size: 17px;
+}
+
+/* Card */
+
+.service-card {
+  background: #ffffff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.10);
+  height: 100%;
+  transition: 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Image */
+
+.service-image {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+}
+
+.service-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.5s ease;
+}
+
+.service-card:hover .service-image img {
+  transform: scale(1.08);
+}
+
+/* Content */
+
+.service-content {
+  padding: 25px;
+}
+
+.service-content h3 {
+  font-size: 23px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.service-content p {
+  color: #666;
+  line-height: 1.6;
+  min-height: 52px;
+}
+
+.service-content h4 {
+  color: #ff1493;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 18px 0;
+}
+
+/* Button */
+
+.book-btn {
+  width: 100%;
+  border: none;
+  background: #ff1493;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.book-btn:hover {
+  background: #d90072;
+}
