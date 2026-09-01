@@ -12,18 +12,20 @@ const packages = [
     ],
   },
 
-  {
-    id: "package-smart",
-    name: "Package Smart",
-    category: "AFFORDABLE",
-    delivery: "65 Days Deliver",
-    price: "₹20,000",
-    highlights: [
-      "Unlimited Photos",
-      "30x10 Size Album (70 Pages)",
-      "10x12 Photo Frame",
-    ],
-  },
+{
+  id: "package-smart",
+  name: "Package Smart",
+  category: "AFFORDABLE",
+  delivery: "65 Days Deliver",
+  price: "₹20,000",
+  image: "/images/packages/smart.png",
+  description: "Capture Moments, Create Memories",
+  highlights: [
+    "Unlimited Photos",
+    "30x10 Size Album (70 Pages)",
+    "10x12 Photo Frame"
+  ],
+},
 
   {
     id: "package-smart-plus",
