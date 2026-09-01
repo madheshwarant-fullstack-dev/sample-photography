@@ -544,3 +544,17 @@ body {
   border-radius: 25px;
   padding: 8px 20px;
 }
+.hero-section {
+  min-height: 100vh;
+  width: 100%;
+
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+    url("/images/hero.jpeg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  color: white;
+}
