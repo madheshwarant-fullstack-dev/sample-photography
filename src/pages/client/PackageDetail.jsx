@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import packages from "../../data/packages";
+import "../../assets/css/PackageDetail.css";
 
 function PackageDetail() {
   const { packageId } = useParams();
