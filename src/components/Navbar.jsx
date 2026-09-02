@@ -1,24 +1,91 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
+    const navigate = useNavigate();
+
+    const [user, setUser] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    // ================= CHECK LOGIN =================
+
+    const checkLogin = () => {
+        const token = localStorage.getItem("token");
+        const userData = localStorage.getItem("user");
+
+        if (token && userData) {
+            try {
+                const parsedUser = JSON.parse(userData);
+
+                setUser(parsedUser);
+                setIsLoggedIn(true);
+            } catch (error) {
+                console.error(
+                    "Invalid user data:",
+                    error
+                );
+
+                setUser(null);
+                setIsLoggedIn(false);
+            }
+        } else {
+            setUser(null);
+            setIsLoggedIn(false);
+        }
+    };
+
+    useEffect(() => {
+        checkLogin();
+
+        window.addEventListener(
+            "storage",
+            checkLogin
+        );
+
+        return () => {
+            window.removeEventListener(
+                "storage",
+                checkLogin
+            );
+        };
+    }, []);
+
+    // ================= LOGOUT =================
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        setUser(null);
+        setIsLoggedIn(false);
+
+        navigate("/login");
+    };
+
     return (
-        <nav className="navbar navbar-expand-lg bg-black navbar-dark static-top">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
 
             <div className="container">
 
-                {/* Logo */}
+                {/* ================= LOGO ================= */}
 
-                <Link className="navbar-brand" to="/">
+                <Link
+                    className="navbar-brand d-flex align-items-center"
+                    to="/"
+                >
                     <img
                         src="/images/Logo.png"
                         alt="Maha Creative Photography"
-                        className="logo"
+                        style={{
+                            height: "45px",
+                            width: "auto",
+                            objectFit: "contain",
+                        }}
                     />
                 </Link>
 
 
-                {/* Mobile Menu Button */}
+                {/* ================= MOBILE TOGGLE ================= */}
 
                 <button
                     className="navbar-toggler"
@@ -33,7 +100,7 @@ function Navbar() {
                 </button>
 
 
-                {/* Navigation Links */}
+                {/* ================= NAVIGATION ================= */}
 
                 <div
                     className="collapse navbar-collapse"
@@ -42,7 +109,7 @@ function Navbar() {
 
                     <ul className="navbar-nav ms-auto align-items-lg-center">
 
-                        {/* Home */}
+                        {/* HOME */}
 
                         <li className="nav-item">
                             <Link
@@ -54,7 +121,7 @@ function Navbar() {
                         </li>
 
 
-                        {/* About */}
+                        {/* ABOUT */}
 
                         <li className="nav-item">
                             <Link
@@ -66,7 +133,7 @@ function Navbar() {
                         </li>
 
 
-                        {/* Services */}
+                        {/* SERVICES */}
 
                         <li className="nav-item">
                             <Link
@@ -78,7 +145,7 @@ function Navbar() {
                         </li>
 
 
-                        {/* Gallery */}
+                        {/* GALLERY */}
 
                         <li className="nav-item">
                             <Link
@@ -90,7 +157,7 @@ function Navbar() {
                         </li>
 
 
-                        {/* Packages */}
+                        {/* PACKAGES */}
 
                         <li className="nav-item">
                             <Link
@@ -102,7 +169,7 @@ function Navbar() {
                         </li>
 
 
-                        {/* Contact */}
+                        {/* CONTACT */}
 
                         <li className="nav-item">
                             <Link
@@ -114,18 +181,85 @@ function Navbar() {
                         </li>
 
 
-                        {/* Login */}
+                        {/* ================= LOGGED OUT ================= */}
 
-                        <li className="nav-item ms-lg-3 mt-2 mt-lg-0">
+                        {!isLoggedIn && (
+                            <>
+                                <li className="nav-item ms-lg-2">
+                                    <Link
+                                        className="btn btn-outline-light btn-sm px-3"
+                                        to="/login"
+                                    >
+                                        Login
+                                    </Link>
+                                </li>
+                            </>
+                        )}
 
-                            <Link
-                                className="btn btn-pink"
-                                to="/login"
-                            >
-                                Login
-                            </Link>
 
-                        </li>
+                        {/* ================= LOGGED IN ================= */}
+
+                        {isLoggedIn && user && (
+                            <li className="nav-item dropdown ms-lg-2">
+
+                                <button
+                                    className="btn btn-outline-light btn-sm dropdown-toggle px-3"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    👤{" "}
+                                    {user.name}
+                                </button>
+
+                                <ul className="dropdown-menu dropdown-menu-end shadow">
+
+                                    {/* PROFILE */}
+
+                                    <li>
+                                        <Link
+                                            className="dropdown-item"
+                                            to="/profile"
+                                        >
+                                            👤 My Profile
+                                        </Link>
+                                    </li>
+
+
+                                    {/* MY BOOKINGS */}
+
+                                    <li>
+                                        <Link
+                                            className="dropdown-item"
+                                            to="/my-bookings"
+                                        >
+                                            📸 My Bookings
+                                        </Link>
+                                    </li>
+
+
+                                    <li>
+                                        <hr className="dropdown-divider" />
+                                    </li>
+
+
+                                    {/* LOGOUT */}
+
+                                    <li>
+                                        <button
+                                            className="dropdown-item text-danger"
+                                            onClick={
+                                                handleLogout
+                                            }
+                                        >
+                                            🚪 Logout
+                                        </button>
+                                    </li>
+
+                                </ul>
+
+                            </li>
+                        )}
 
                     </ul>
 

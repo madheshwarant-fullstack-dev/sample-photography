@@ -1,10 +1,18 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+} from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
-// Client Pages
+import AdminProtectedRoute from "./components/AdminProtectedRoute";
+import ClientProtectedRoute from "./components/ClientProtectedRoute";
+
+// ================= CLIENT PAGES =================
+
 import Home from "./pages/client/Home";
 import About from "./pages/client/About";
 import Services from "./pages/client/Services";
@@ -16,8 +24,10 @@ import Contact from "./pages/client/Contact";
 import Login from "./pages/client/Login";
 import Signup from "./pages/client/Signup";
 import Profile from "./pages/client/Profile";
+import MyBookings from "./pages/client/MyBookings";
 
-// Admin Pages
+// ================= ADMIN PAGES =================
+
 import AdminLogin from "./pages/admin/AdminLogin";
 import Dashboard from "./pages/admin/Dashboard";
 import Users from "./pages/admin/Users";
@@ -26,13 +36,14 @@ import GalleryManagement from "./pages/admin/GalleryManagement";
 import PackageManagement from "./pages/admin/PackageManagement";
 import Messages from "./pages/admin/Messages";
 
+
 function App() {
     return (
         <BrowserRouter>
 
             <Routes>
 
-                {/* ================= CLIENT ================= */}
+                {/* ================= CLIENT PUBLIC ================= */}
 
                 <Route
                     path="/"
@@ -132,54 +143,79 @@ function App() {
                     element={<Signup />}
                 />
 
-                <Route
-                    path="/profile"
-                    element={
-                        <>
-                            <Navbar />
-                            <Profile />
-                            <Footer />
-                        </>
-                    }
-                />
+
+                {/* ================= CLIENT PROTECTED ================= */}
+
+                <Route element={<ClientProtectedRoute />}>
+
+                    <Route
+                        path="/profile"
+                        element={
+                            <>
+                                <Navbar />
+                                <Profile />
+                                <Footer />
+                            </>
+                        }
+                    />
+
+                    <Route
+                        path="/my-bookings"
+                        element={
+                            <>
+                                <Navbar />
+                                <MyBookings />
+                                <Footer />
+                            </>
+                        }
+                    />
+
+                </Route>
 
 
-                {/* ================= ADMIN ================= */}
+                {/* ================= ADMIN LOGIN ================= */}
 
                 <Route
                     path="/admin/login"
                     element={<AdminLogin />}
                 />
 
-                <Route
-                    path="/admin/dashboard"
-                    element={<Dashboard />}
-                />
 
-                <Route
-                    path="/admin/users"
-                    element={<Users />}
-                />
+                {/* ================= ADMIN PROTECTED ================= */}
 
-                <Route
-                    path="/admin/bookings"
-                    element={<Bookings />}
-                />
+                <Route element={<AdminProtectedRoute />}>
 
-                <Route
-                    path="/admin/gallery"
-                    element={<GalleryManagement />}
-                />
+                    <Route
+                        path="/admin/dashboard"
+                        element={<Dashboard />}
+                    />
 
-                <Route
-                    path="/admin/packages"
-                    element={<PackageManagement />}
-                />
+                    <Route
+                        path="/admin/users"
+                        element={<Users />}
+                    />
 
-                <Route
-                    path="/admin/messages"
-                    element={<Messages />}
-                />
+                    <Route
+                        path="/admin/bookings"
+                        element={<Bookings />}
+                    />
+
+                    <Route
+                        path="/admin/gallery"
+                        element={<GalleryManagement />}
+                    />
+
+                    <Route
+                        path="/admin/packages"
+                        element={<PackageManagement />}
+                    />
+
+                    <Route
+                        path="/admin/messages"
+                        element={<Messages />}
+                    />
+
+                </Route>
 
             </Routes>
 

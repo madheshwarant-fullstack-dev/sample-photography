@@ -1,6 +1,95 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
+    const navigate = useNavigate();
+
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        password: "",
+        confirmPassword: "",
+    });
+
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    // Handle input changes
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    // Handle signup
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        setMessage("");
+
+        // Password check
+        if (formData.password !== formData.confirmPassword) {
+            setMessage("Passwords do not match");
+            return;
+        }
+
+        if (formData.password.length < 6) {
+            setMessage("Password must be at least 6 characters");
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            const response = await fetch(
+                "http://localhost:5000/api/auth/register",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        name: formData.name,
+                        email: formData.email,
+                        phone: formData.phone,
+                        password: formData.password,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (data.success) {
+                setMessage("Account created successfully!");
+
+                // Clear form
+                setFormData({
+                    name: "",
+                    email: "",
+                    phone: "",
+                    password: "",
+                    confirmPassword: "",
+                });
+
+                // Go to login after 1 second
+                setTimeout(() => {
+                    navigate("/login");
+                }, 1000);
+            } else {
+                setMessage(data.message || "Registration failed");
+            }
+        } catch (error) {
+            console.error("Signup Error:", error);
+            setMessage(
+                "Unable to connect to server. Please try again."
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <section className="auth-section py-5">
 
@@ -28,15 +117,19 @@ function Signup() {
 
                             </div>
 
-                            <form>
+                            <form onSubmit={handleSubmit}>
 
                                 <div className="mb-3">
                                     <label>Full Name</label>
 
                                     <input
                                         type="text"
+                                        name="name"
                                         className="form-control"
                                         placeholder="Enter your name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        required
                                     />
                                 </div>
 
@@ -45,8 +138,12 @@ function Signup() {
 
                                     <input
                                         type="email"
+                                        name="email"
                                         className="form-control"
                                         placeholder="Enter your email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        required
                                     />
                                 </div>
 
@@ -55,8 +152,12 @@ function Signup() {
 
                                     <input
                                         type="tel"
+                                        name="phone"
                                         className="form-control"
                                         placeholder="Enter your phone number"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        required
                                     />
                                 </div>
 
@@ -65,8 +166,12 @@ function Signup() {
 
                                     <input
                                         type="password"
+                                        name="password"
                                         className="form-control"
                                         placeholder="Create password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        required
                                     />
                                 </div>
 
@@ -75,16 +180,30 @@ function Signup() {
 
                                     <input
                                         type="password"
+                                        name="confirmPassword"
                                         className="form-control"
                                         placeholder="Confirm password"
+                                        value={formData.confirmPassword}
+                                        onChange={handleChange}
+                                        required
                                     />
                                 </div>
+
+                                {/* Message */}
+                                {message && (
+                                    <div className="text-center mb-3">
+                                        {message}
+                                    </div>
+                                )}
 
                                 <button
                                     type="submit"
                                     className="btn btn-pink w-100"
+                                    disabled={loading}
                                 >
-                                    Create Account
+                                    {loading
+                                        ? "Creating Account..."
+                                        : "Create Account"}
                                 </button>
 
                             </form>

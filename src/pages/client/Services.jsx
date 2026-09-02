@@ -4,7 +4,7 @@ import "../../assets/css/Services.css";
 function Services() {
   const services = [
     {
-      image: "/images/services/wedding.jpg",
+      image: "/images/gallery/Wedding2.jpeg",
       title: "Wedding Photography",
       description:
         "Beautifully capture every special moment of your wedding day.",

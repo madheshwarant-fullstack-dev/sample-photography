@@ -1,10 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "../../assets/css/Packages.css";
-import packages from "../../data/packages";
+
+const API_URL = "http://localhost:5000";
 
 function Packages() {
+    const [packages, setPackages] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("ALL");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        fetch(`${API_URL}/api/packages`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch packages");
+                }
+
+                return response.json();
+            })
+            .then((data) => {
+                if (data.success) {
+                    setPackages(data.packages);
+                } else {
+                    setError(data.message || "Unable to load packages");
+                }
+
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Package fetch error:", error);
+                setError("Unable to connect to server");
+                setLoading(false);
+            });
+    }, []);
 
     const categories = [
         "ALL",
@@ -18,49 +46,67 @@ function Packages() {
                   (pkg) => pkg.category === selectedCategory
               );
 
+    const getImageUrl = (image) => {
+        if (!image) {
+            return null;
+        }
+
+        if (image.startsWith("http://") || image.startsWith("https://")) {
+            return image;
+        }
+
+        if (image.startsWith("/")) {
+            return `${API_URL}${image}`;
+        }
+
+        return `${API_URL}/${image}`;
+    };
+
+    if (loading) {
+        return (
+            <div className="container py-5 text-center">
+                <h4>Loading Packages...</h4>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="container py-5 text-center">
+                <div className="alert alert-danger">
+                    {error}
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="packages-page">
+        <section className="packages-section py-5">
+            <div className="container">
 
-            {/* ================= HERO ================= */}
+                {/* Heading */}
+                <div className="text-center mb-4">
+                    <h1 className="fw-bold">
+                        Choose Your Package
+                    </h1>
 
-            <section className="packages-hero">
-                <div className="packages-hero-content">
-                    <h1>Our Photography Packages</h1>
-
-                    <p>
-                        Choose the perfect photography package for your
-                        special moments. From intimate sessions to grand
-                        celebrations, we create memories that last forever.
-                    </p>
-                </div>
-            </section>
-
-
-            {/* ================= PACKAGES ================= */}
-
-            <section className="packages-section">
-
-                <div className="packages-section-header">
-                    <h2>Choose Your Package</h2>
-
-                    <p>
-                        Explore our carefully designed photography packages
-                        and find the one that suits your occasion.
+                    <p className="text-muted">
+                        Explore our carefully designed photography
+                        packages. Choose the one that suits your
+                        special moments.
                     </p>
                 </div>
 
-
-                {/* ================= FILTER ================= */}
-
-                <div className="package-filters">
-
+                {/* Category Buttons */}
+                <div className="text-center mb-5">
                     {categories.map((category) => (
                         <button
                             key={category}
-                            className={`package-filter-btn ${
+                            type="button"
+                            className={`btn btn-sm me-2 mb-2 ${
                                 selectedCategory === category
-                                    ? "active"
-                                    : ""
+                                    ? "btn-dark"
+                                    : "btn-outline-dark"
                             }`}
                             onClick={() =>
                                 setSelectedCategory(category)
@@ -69,139 +115,153 @@ function Packages() {
                             {category}
                         </button>
                     ))}
-
                 </div>
 
+                {/* Packages */}
+                {filteredPackages.length === 0 ? (
+                    <div className="alert alert-info text-center">
+                        No packages found.
+                    </div>
+                ) : (
+                    <div className="row g-4">
 
-                {/* ================= PACKAGE GRID ================= */}
+                        {filteredPackages.map((pkg) => {
+                            const imageUrl = getImageUrl(pkg.image);
 
-                {filteredPackages.length > 0 ? (
+                            return (
+                                <div
+                                    className="col-lg-4 col-md-6"
+                                    key={pkg._id}
+                                >
+                                    <div
+                                        className="card h-100 border-0 shadow-sm"
+                                        style={{
+                                            borderRadius: "8px",
+                                            overflow: "hidden",
+                                        }}
+                                    >
 
-                    <div className="packages-grid">
+                                        {/* Package Image */}
+                                        <div
+                                            style={{
+                                                height: "320px",
+                                                backgroundColor: "#f5f5f5",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                            }}
+                                        >
+                                            {imageUrl ? (
+                                                <img
+                                                    src={imageUrl}
+                                                    alt={pkg.name}
+                                                    className="img-fluid w-100 h-100"
+                                                    style={{
+                                                        objectFit: "cover",
+                                                    }}
+                                                    onError={(e) => {
+                                                        e.currentTarget.style.display =
+                                                            "none";
 
-                        {filteredPackages.map((pkg, index) => (
+                                                        e.currentTarget.parentElement.innerHTML =
+                                                            '<span class="text-muted">No Image</span>';
+                                                    }}
+                                                />
+                                            ) : (
+                                                <span className="text-muted">
+                                                    No Image
+                                                </span>
+                                            )}
+                                        </div>
 
-                            <div
-                                className={`package-card ${
-                                    index === 1 ? "featured" : ""
-                                }`}
-                                key={pkg.id}
-                            >
+                                        {/* Package Details */}
+                                        <div className="card-body">
 
-                                {/* Image */}
+                                            <span className="badge bg-dark mb-2">
+                                                {pkg.category}
+                                            </span>
 
-                                <div className="package-image">
+                                            <h3 className="card-title fw-bold">
+                                                {pkg.name}
+                                            </h3>
 
-                                    <img
-                                        src={pkg.image}
-                                        alt={pkg.name}
-                                    />
+                                            <p className="mb-2">
+                                                <strong>
+                                                    Delivery:
+                                                </strong>{" "}
+                                                {pkg.delivery}
+                                            </p>
 
-                                </div>
+                                            <h4 className="fw-bold mb-3">
+                                                ₹
+                                                {Number(
+                                                    pkg.price
+                                                ).toLocaleString(
+                                                    "en-IN"
+                                                )}
+                                            </h4>
 
+                                            {pkg.description && (
+                                                <p className="text-muted">
+                                                    {pkg.description}
+                                                </p>
+                                            )}
 
-                                {/* Content */}
+                                            <h6 className="fw-bold">
+                                                Highlights
+                                            </h6>
 
-                                <div className="package-content">
-
-                                    <span className="package-category">
-                                        {pkg.category}
-                                    </span>
-
-                                    <h3>
-                                        {pkg.name}
-                                    </h3>
-
-
-                                    {pkg.description && (
-                                        <p className="package-description">
-                                            {pkg.description}
-                                        </p>
-                                    )}
-
-
-                                    {/* Price */}
-
-                                    <div className="package-price">
-
-                                        <span className="package-price-label">
-                                            Starting from
-                                        </span>
-
-                                        <span className="package-price-value">
-                                            {pkg.price}
-                                        </span>
-
-                                    </div>
-
-
-                                    {/* Highlights */}
-
-                                    {pkg.highlights &&
-                                        pkg.highlights.length > 0 && (
-
-                                            <ul className="package-highlights">
-
-                                                {pkg.highlights.map(
-                                                    (highlight, i) => (
-                                                        <li key={i}>
-                                                            {highlight}
+                                            <ul className="small">
+                                                {pkg.highlights?.map(
+                                                    (
+                                                        highlight,
+                                                        index
+                                                    ) => (
+                                                        <li
+                                                            key={
+                                                                index
+                                                            }
+                                                        >
+                                                            {
+                                                                highlight
+                                                            }
                                                         </li>
                                                     )
                                                 )}
-
                                             </ul>
+                                        </div>
 
-                                        )}
+                                        {/* Buttons */}
+                                        <div className="card-footer bg-white border-0 p-3">
+                                            <div className="d-flex gap-2">
 
+                                                <Link
+                                                    to={`/package/${pkg.packageId}`}
+                                                    className="btn btn-outline-dark w-50"
+                                                >
+                                                    View Details
+                                                </Link>
 
-                                    {/* Buttons */}
+                                                <Link
+                                                    to={`/booking?package=${pkg.packageId}`}
+                                                    className="btn btn-dark w-50"
+                                                >
+                                                    Book Now
+                                                </Link>
 
-                                    <div className="package-buttons">
-
-                                        <Link
-                                            to={`/package/${pkg.id}`}
-                                            className="package-btn package-btn-secondary"
-                                        >
-                                            View Details
-                                        </Link>
-
-                                        <Link
-                                            to={`/booking?package=${pkg.id}`}
-                                            className="package-btn package-btn-primary"
-                                        >
-                                            Book Now
-                                        </Link>
+                                            </div>
+                                        </div>
 
                                     </div>
-
                                 </div>
-
-                            </div>
-
-                        ))}
+                            );
+                        })}
 
                     </div>
-
-                ) : (
-
-                    <div className="no-packages">
-
-                        <h3>
-                            No Packages Found
-                        </h3>
-
-                        <p>
-                            Please try another category.
-                        </p>
-
-                    </div>
-
                 )}
 
-            </section>
-
-        </div>
+            </div>
+        </section>
     );
 }
 

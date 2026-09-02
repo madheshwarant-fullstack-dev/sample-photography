@@ -1,152 +1,186 @@
-import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import packages from "../../data/packages";
-import "../../assets/css/PackageDetail.css";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+const API_URL = "http://localhost:5000";
 
 function PackageDetail() {
-  const { packageId } = useParams();
-  const navigate = useNavigate();
+    const { packageId } = useParams();
+    const navigate = useNavigate();
 
-  const selectedPackage = packages.find(
-    (pkg) => pkg.id === packageId
-  );
+    const [pkg, setPkg] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-  if (!selectedPackage) {
+    useEffect(() => {
+        fetch(`${API_URL}/api/packages/${packageId}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Package not found");
+                }
+
+                return response.json();
+            })
+            .then((data) => {
+                if (data.success) {
+                    setPkg(data.package);
+                } else {
+                    setError(data.message);
+                }
+
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error(error);
+                setError("Unable to load package");
+                setLoading(false);
+            });
+    }, [packageId]);
+
+    const getImageUrl = (image) => {
+        if (!image) {
+            return null;
+        }
+
+        if (
+            image.startsWith("http://") ||
+            image.startsWith("https://")
+        ) {
+            return image;
+        }
+
+        return `${API_URL}${image.startsWith("/") ? "" : "/"}${image}`;
+    };
+
+    if (loading) {
+        return (
+            <div className="container py-5 text-center">
+                <h4>Loading Package...</h4>
+            </div>
+        );
+    }
+
+    if (error || !pkg) {
+        return (
+            <div className="container py-5">
+                <div className="alert alert-danger">
+                    {error || "Package not found"}
+                </div>
+
+                <button
+                    className="btn btn-dark"
+                    onClick={() => navigate("/packages")}
+                >
+                    Back to Packages
+                </button>
+            </div>
+        );
+    }
+
+    const imageUrl = getImageUrl(pkg.image);
+
     return (
-      <div style={{ padding: "50px", textAlign: "center" }}>
-        <h2>Package Not Found</h2>
+        <section className="py-5">
+            <div className="container">
 
-        <button onClick={() => navigate("/")}>
-          Back to Home
-        </button>
-      </div>
+                <button
+                    className="btn btn-outline-dark mb-4"
+                    onClick={() => navigate("/packages")}
+                >
+                    ← Back to Packages
+                </button>
+
+                <div className="row g-5">
+
+                    {/* Image */}
+                    <div className="col-lg-6">
+                        <div
+                            style={{
+                                height: "500px",
+                                backgroundColor: "#f5f5f5",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            {imageUrl ? (
+                                <img
+                                    src={imageUrl}
+                                    alt={pkg.name}
+                                    className="img-fluid w-100 h-100"
+                                    style={{
+                                        objectFit: "cover",
+                                    }}
+                                />
+                            ) : (
+                                <span className="text-muted">
+                                    No Image Available
+                                </span>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Details */}
+                    <div className="col-lg-6">
+
+                        <span className="badge bg-dark mb-3">
+                            {pkg.category}
+                        </span>
+
+                        <h1 className="fw-bold">
+                            {pkg.name}
+                        </h1>
+
+                        <p className="text-muted">
+                            {pkg.description}
+                        </p>
+
+                        <h2 className="fw-bold">
+                            ₹
+                            {Number(pkg.price).toLocaleString(
+                                "en-IN"
+                            )}
+                        </h2>
+
+                        <p>
+                            <strong>Delivery:</strong>{" "}
+                            {pkg.delivery}
+                        </p>
+
+                        <hr />
+
+                        <h4 className="fw-bold mb-3">
+                            Package Highlights
+                        </h4>
+
+                        <ul>
+                            {pkg.highlights?.map(
+                                (highlight, index) => (
+                                    <li
+                                        key={index}
+                                        className="mb-2"
+                                    >
+                                        {highlight}
+                                    </li>
+                                )
+                            )}
+                        </ul>
+
+                        <button
+                            className="btn btn-dark btn-lg mt-3"
+                            onClick={() =>
+                                navigate(
+                                    `/booking?package=${pkg.packageId}`
+                                )
+                            }
+                        >
+                            Enquire Now
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </section>
     );
-  }
-
-  return (
-    <div className="package-detail">
-
-      {/* Top Header */}
-      <div className="package-header">
-
-        <button
-          className="back-btn"
-          onClick={() => navigate(-1)}
-        >
-          ←
-        </button>
-
-        <h2>{selectedPackage.name}</h2>
-
-        <button className="share-btn">
-          ⤴
-        </button>
-
-      </div>
-
-
-      {/* Package Image */}
-      <div className="package-image">
-
-        <img
-          src={selectedPackage.image}
-          alt={selectedPackage.name}
-        />
-
-      </div>
-
-
-      {/* Package Content */}
-      <div className="package-content">
-
-        {/* Category */}
-        <p className="package-category">
-          {selectedPackage.category}
-        </p>
-
-
-        {/* Package Name */}
-        <h1>{selectedPackage.name}</h1>
-
-
-        {/* Delivery + Price */}
-        <div className="package-info">
-
-          <div className="info-box delivery">
-            <span>◷</span>
-            <strong>
-              {selectedPackage.delivery}
-            </strong>
-          </div>
-
-
-          <div className="info-box price">
-            <span>▣</span>
-            <strong>
-              {selectedPackage.price}
-            </strong>
-          </div>
-
-        </div>
-
-
-        {/* About */}
-        <section className="about-section">
-
-          <h2>About this Service</h2>
-
-          <p>
-            {selectedPackage.description ||
-              "Capture Moments, Create Memories"}
-          </p>
-
-        </section>
-
-
-        {/* Highlights */}
-        <section className="highlights-section">
-
-          <h2>Highlights</h2>
-
-          <ul>
-
-            {selectedPackage.highlights.map(
-              (highlight, index) => (
-                <li key={index}>
-
-                  <span className="check">
-                    ✓
-                  </span>
-
-                  {highlight}
-
-                </li>
-              )
-            )}
-
-          </ul>
-
-        </section>
-
-      </div>
-
-
-      {/* Bottom Enquire Button */}
-      <div className="enquire-container">
-
-         <button
-            className="enquire-btn"
-            onClick={() =>
-            navigate(`/booking?package=${selectedPackage.id}`)
-          }
-        >
-             Enquire Now
-          </button>
-
-      </div>
-
-    </div>
-  );
 }
 
 export default PackageDetail;
