@@ -11,7 +11,7 @@ function About() {
                     <div className="col-lg-6">
 
                         <img
-                            src="/images/about.jpg"
+                            src="/images/Camera.png"
                             alt="Maha Creative Photography"
                             className="img-fluid about-image"
                         />
