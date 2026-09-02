@@ -134,21 +134,14 @@ function PackageDetail() {
       {/* Bottom Enquire Button */}
       <div className="enquire-container">
 
-        <button
-          className="enquire-btn"
-          onClick={() => {
-            window.open(
-              "https://wa.me/919790102798",
-              "_blank"
-            );
-          }}
+         <button
+            className="enquire-btn"
+            onClick={() =>
+            navigate(`/booking?package=${selectedPackage.id}`)
+          }
         >
-
-          <span>◉</span>
-
-          Enquire Now
-
-        </button>
+             Enquire Now
+          </button>
 
       </div>
 

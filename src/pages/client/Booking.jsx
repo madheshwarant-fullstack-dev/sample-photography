@@ -1,195 +1,263 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import packages from "../../data/packages";
+import "../../assets/css/Booking.css";
 
 function Booking() {
-    return (
-        <section className="py-5">
+  const [searchParams] = useSearchParams();
 
-            <div className="container py-5">
+  const selectedPackageId = searchParams.get("package");
 
-                <div className="text-center mb-5">
-                    <p className="section-title">
-                        BOOK A SESSION
-                    </p>
+  const selectedPackage = packages.find(
+    (pkg) => pkg.id === selectedPackageId
+  );
 
-                    <h1 className="fw-bold">
-                        Book Your{" "}
-                        <span className="pink-text">
-                            Photography Session
-                        </span>
-                    </h1>
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    eventType: "",
+    eventDate: "",
+    location: "",
+    message: "",
+  });
 
-                    <p className="text-muted">
-                        Fill in the details below and we will
-                        get back to you soon.
-                    </p>
-                </div>
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-                <div className="row justify-content-center">
+    console.log("Booking Details:", {
+      ...formData,
+      package: selectedPackage?.name || "",
+    });
 
-                    <div className="col-lg-8">
+    alert("Booking request submitted successfully!");
 
-                        <div className="auth-card">
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      eventType: "",
+      eventDate: "",
+      location: "",
+      message: "",
+    });
+  };
 
-                            <form>
+  return (
+    <div className="booking-page">
 
-                                <div className="row g-3">
+      {/* Page Header */}
+      <section className="booking-header">
+        <p>BOOK YOUR SESSION</p>
+        <h1>Let's Capture Your Moments</h1>
+        <span>
+          Fill in your details and our team will get back to you.
+        </span>
+      </section>
 
-                                    <div className="col-md-6">
-                                        <label className="form-label">
-                                            Full Name
-                                        </label>
+      <section className="booking-container">
 
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Enter your name"
-                                        />
-                                    </div>
+        {/* Selected Package */}
+        <div className="booking-summary">
 
+          <h2>Booking Details</h2>
 
-                                    <div className="col-md-6">
-                                        <label className="form-label">
-                                            Phone Number
-                                        </label>
+          {selectedPackage ? (
+            <div className="selected-package">
 
-                                        <input
-                                            type="tel"
-                                            className="form-control"
-                                            placeholder="Enter your phone number"
-                                        />
-                                    </div>
+              <p className="summary-label">
+                SELECTED PACKAGE
+              </p>
 
+              <h3>{selectedPackage.name}</h3>
 
-                                    <div className="col-md-6">
-                                        <label className="form-label">
-                                            Email
-                                        </label>
+              <div className="summary-info">
+                <span>
+                  Delivery
+                </span>
+                <strong>
+                  {selectedPackage.delivery}
+                </strong>
+              </div>
 
-                                        <input
-                                            type="email"
-                                            className="form-control"
-                                            placeholder="Enter your email"
-                                        />
-                                    </div>
-
-
-                                    <div className="col-md-6">
-                                        <label className="form-label">
-                                            Event Type
-                                        </label>
-
-                                        <select className="form-select">
-
-                                            <option value="">
-                                                Select Event
-                                            </option>
-
-                                            <option>
-                                                Wedding
-                                            </option>
-
-                                            <option>
-                                                Pre-Wedding
-                                            </option>
-
-                                            <option>
-                                                Birthday
-                                            </option>
-
-                                            <option>
-                                                Portrait
-                                            </option>
-
-                                            <option>
-                                                Product Photography
-                                            </option>
-
-                                            <option>
-                                                Other
-                                            </option>
-
-                                        </select>
-                                    </div>
-
-
-                                    <div className="col-md-6">
-                                        <label className="form-label">
-                                            Event Date
-                                        </label>
-
-                                        <input
-                                            type="date"
-                                            className="form-control"
-                                        />
-                                    </div>
-
-
-                                    <div className="col-md-6">
-                                        <label className="form-label">
-                                            Package
-                                        </label>
-
-                                        <select className="form-select">
-
-                                            <option value="">
-                                                Select Package
-                                            </option>
-
-                                            <option>
-                                                Basic - ₹5,000
-                                            </option>
-
-                                            <option>
-                                                Premium - ₹15,000
-                                            </option>
-
-                                            <option>
-                                                Wedding - ₹30,000
-                                            </option>
-
-                                        </select>
-                                    </div>
-
-
-                                    <div className="col-12">
-                                        <label className="form-label">
-                                            Message
-                                        </label>
-
-                                        <textarea
-                                            className="form-control"
-                                            rows="5"
-                                            placeholder="Tell us about your event..."
-                                        ></textarea>
-                                    </div>
-
-
-                                    <div className="col-12">
-
-                                        <button
-                                            type="submit"
-                                            className="btn btn-pink w-100"
-                                        >
-                                            Submit Booking
-                                        </button>
-
-                                    </div>
-
-                                </div>
-
-                            </form>
-
-                        </div>
-
-                    </div>
-
-                </div>
+              <div className="summary-info">
+                <span>
+                  Price
+                </span>
+                <strong>
+                  {selectedPackage.price}
+                </strong>
+              </div>
 
             </div>
+          ) : (
+            <div className="no-package">
+              <p>No package selected.</p>
+              <p>
+                You can still submit an enquiry and choose
+                your package later.
+              </p>
+            </div>
+          )}
 
-        </section>
-    );
+        </div>
+
+        {/* Booking Form */}
+        <div className="booking-form-box">
+
+          <h2>Tell Us About Your Event</h2>
+
+          <form onSubmit={handleSubmit}>
+
+            {/* Name */}
+            <div className="form-group">
+              <label>Full Name</label>
+
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter your name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Email */}
+            <div className="form-group">
+              <label>Email Address</label>
+
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Phone */}
+            <div className="form-group">
+              <label>Phone Number</label>
+
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Enter your phone number"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Event Type */}
+            <div className="form-group">
+              <label>Event Type</label>
+
+              <select
+                name="eventType"
+                value={formData.eventType}
+                onChange={handleChange}
+                required
+              >
+                <option value="">
+                  Select Event Type
+                </option>
+
+                <option value="Wedding">
+                  Wedding
+                </option>
+
+                <option value="Birthday">
+                  Birthday
+                </option>
+
+                <option value="Baby Shoot">
+                  Baby Shoot
+                </option>
+
+                <option value="Pre Wedding">
+                  Pre Wedding
+                </option>
+
+                <option value="Engagement">
+                  Engagement
+                </option>
+
+                <option value="Maternity">
+                  Maternity
+                </option>
+
+                <option value="Other">
+                  Other
+                </option>
+              </select>
+            </div>
+
+            {/* Event Date */}
+            <div className="form-group">
+              <label>Event Date</label>
+
+              <input
+                type="date"
+                name="eventDate"
+                value={formData.eventDate}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Location */}
+            <div className="form-group">
+              <label>Event Location</label>
+
+              <input
+                type="text"
+                name="location"
+                placeholder="Enter event location"
+                value={formData.location}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Message */}
+            <div className="form-group">
+              <label>Additional Message</label>
+
+              <textarea
+                name="message"
+                rows="5"
+                placeholder="Tell us about your requirements..."
+                value={formData.message}
+                onChange={handleChange}
+              ></textarea>
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              className="booking-submit"
+            >
+              Submit Booking Request
+            </button>
+
+          </form>
+
+        </div>
+
+      </section>
+
+    </div>
+  );
 }
 
 export default Booking;
